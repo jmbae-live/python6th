@@ -3,8 +3,8 @@ from psycopg2 import sql
 
 conn = psycopg2.connect(
     host='localhost',
-    dbname='postgres',
-    user='postgres',
+    dbname='library',
+    user='user1',
     password='password',
 )
 
@@ -17,6 +17,12 @@ cur = conn.cursor()
 # name VARCHAR(50))
 # ''')
 # conn.commit()
+
+cur.execute('SELECT * FROM test_table')
+rows = cur.fetchall()
+
+for row in rows:
+    print(row)
 
 cur.close()
 conn.close()
