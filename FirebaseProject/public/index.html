@@ -48,7 +48,7 @@
             <input type="submit" value="등록">
         </form>
     </div>
-    <ul id="book-list">
+    <ul id="book-list" style="max-height: 400px; overflow-y: scroll; display: flex; flex-direction: column-reverse;">
     </ul>
 </div>
 
@@ -66,7 +66,7 @@
 
 
         // 자동으로 새로운 데이터를 갱신해줌 onSnapshot
-        firebase.firestore().collection('books').orderBy('title').onSnapshot((fulfilled) => {
+        firebase.firestore().collection('books').orderBy('timestamp', 'desc').onSnapshot((fulfilled) => {
             console.log('snapshot', fulfilled.docs.map(d => d.data().title));
             const ulElement = document.getElementById('book-list')
             fulfilled.docs.forEach(d => {
@@ -86,7 +86,11 @@
             e.preventDefault();
             console.log('책 등록', bookTitle.value, firebase.auth().currentUser.uid);
             const docRef = firebase.firestore().collection('books').doc();
-            await docRef.set({title: bookTitle.value, userId: firebase.auth().currentUser.uid});
+            await docRef.set({
+                title: bookTitle.value,
+                userId: firebase.auth().currentUser.uid,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            });
         })
 
         // 회원 인증시 이벤트 처리
