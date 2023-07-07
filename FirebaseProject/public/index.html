@@ -84,9 +84,9 @@
         const bookTitle = document.getElementById('book-title');
         bookForm.addEventListener('submit', async function (e) {
             e.preventDefault();
-            console.log('책 등록', bookTitle.value);
+            console.log('책 등록', bookTitle.value, firebase.auth().currentUser.uid);
             const docRef = firebase.firestore().collection('books').doc();
-            await docRef.set({title: bookTitle.value});
+            await docRef.set({title: bookTitle.value, userId: firebase.auth().currentUser.uid});
         })
 
         // 회원 인증시 이벤트 처리
