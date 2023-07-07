@@ -41,24 +41,25 @@
 <div id="loggedIn" style="display: none">
     <button onclick="logout()">로그아웃</button>
 </div>
+
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const loadEl = document.querySelector('#load');
+    document.addEventListener('DOMContentLoaded', async function () {
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
+        // async 컬랙션 호출 구문
+        const fulfilled = await firebase.firestore().collection('books').orderBy('title').get();
+        console.log('1', fulfilled.docs.map(d => d.data().title));
 
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        // 컬랙션 콜백 호출 구문 위와 동일
+        firebase.firestore().collection('books').orderBy('title').get().then((fulfilled) => {
+            console.log('2', fulfilled.docs.map(d => d.data().title));
+        })
 
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+        // 자동으로 새로운 데이터를 갱신해줌 onSnapshot
+        firebase.firestore().collection('books').orderBy('title').onSnapshot((fulfilled) => {
+            console.log('snapshot', fulfilled.docs.map(d => d.data().title));
+        })
 
         // 회원 인증시 이벤트 처리
         firebase.auth().onAuthStateChanged(function (user) {
