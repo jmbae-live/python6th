@@ -41,7 +41,10 @@
 <div id="loggedIn" style="display: none">
     <button onclick="logout()">로그아웃</button>
 </div>
-
+<div class="container">
+    <ul id="book-list">
+    </ul>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
@@ -59,6 +62,16 @@
         // 자동으로 새로운 데이터를 갱신해줌 onSnapshot
         firebase.firestore().collection('books').orderBy('title').onSnapshot((fulfilled) => {
             console.log('snapshot', fulfilled.docs.map(d => d.data().title));
+            const ulElement = document.getElementById('book-list')
+            fulfilled.docs.forEach(d => {
+                const checkElement = document.getElementById(d.id);
+                if (!checkElement) {
+                    const liElement = document.createElement('li');
+                    liElement.id = d.id;
+                    liElement.textContent = d.data().title;
+                    ulElement.appendChild(liElement);
+                }
+            })
         })
 
         // 회원 인증시 이벤트 처리
